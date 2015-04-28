@@ -1,0 +1,3 @@
+- Les Projets sont totalement indépendants entre eux.
+- Phase : nom donné à la période précédent un jalon (inclus dans le jalon en lui même)
+- Le budget des Projets, Lots, Sous-Projets sont des Budgets alloués. Il ne sont que des indicatifs qui doivent être comparés au budget réel de chaque tâches cumulées. En revanche : Projet.Budget >= SOMME(Projet.Lot.Budget), Lot.Budget >= SOMME(Lot.SousProjet.Budget)
