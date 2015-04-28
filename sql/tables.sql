@@ -169,6 +169,7 @@ CREATE TABLE Jalons(
 	idJalon INT PRIMARY KEY,
 	idTache INT NOT NULL,
 	nom VARCHAR2(150),
+	phase VARCHAR2(30), /*Un nom pour la période précédente*/
 	accompli CHAR(1 byte) DEFAULT 0,
 	FOREIGN KEY (idTache) REFERENCES Taches(idTache)
 );
