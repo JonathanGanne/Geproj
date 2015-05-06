@@ -213,14 +213,14 @@ CREATE TABLE Personel_externe (
 	entreprise VARCHAR(50),
 	nom VARCHAR2(50),
 	prenom VARCHAR2(50),
-	competences varchar(50),
+	competences varchar(50)
 );
 
 CREATE SEQUENCE persoext_seq;
 CREATE OR REPLACE TRIGGER persoext_trigg
 BEFORE INSERT ON Personel_externe FOR EACH ROW
 BEGIN
-	SELECT persotext_seq.NEXTVAL
+	SELECT persoext_seq.NEXTVAL
 	INTO :new.idPerso
 	FROM DUAL;
 END;
@@ -233,4 +233,120 @@ CREATE TABLE RH_Externe(
 	PRIMARY KEY (idPerso, idTache),
 	FOREIGN KEY (idPerso) REFERENCES Personel_externe(IdPerso),
 	FOREIGN KEY (idTache) REFERENCES Taches(idTache)
+);
+
+CREATE TABLE Cout_logiciel(
+	idCoutLogiciel INT PRIMARY KEY,
+	idTache INT NOT NULL,
+	prix DECIMAL(7,2) NOT NULL,
+	nom_logiciel varchar(20) NOT NULL,
+	FOREIGN KEY (idTache) REFERENCES Taches(idTache)
+);
+CREATE SEQUENCE coutlogiciel_seq;
+CREATE OR REPLACE TRIGGER coutlogiciel_trigg
+BEFORE INSERT ON Cout_logiciel FOR EACH ROW
+BEGIN
+	SELECT coutlogiciel_seq.NEXTVAL
+	INTO :new.idCoutLogiciel
+	FROM DUAL;
+END;
+/
+
+CREATE TABLE Cout_materiel(
+	idCoutMateriel INT PRIMARY KEY,
+	idTache INT NOT NULL,
+	prix DECIMAL(7,2) NOT NULL,
+	nom_materiel varchar(20) NOT NULL,
+	FOREIGN KEY (idTache) REFERENCES Taches(idTache)
+);
+CREATE SEQUENCE coutmateriel_seq;
+CREATE OR REPLACE TRIGGER coutmateriel_trigg
+BEFORE INSERT ON Cout_materiel FOR EACH ROW
+BEGIN
+	SELECT coutmateriel_seq.NEXTVAL
+	INTO :new.idCoutMateriel
+	FROM DUAL;
+END;
+/
+
+CREATE TABLE Factures(
+	idFactures INT PRIMARY KEY,
+	prix_unitaire DECIMAL(7,2) NOT NULL,
+	date_vente date,
+	quantite INT NOT NULL,
+	date_reglement date
+);
+CREATE SEQUENCE factures_seq;
+CREATE OR REPLACE TRIGGER factures_trigg
+BEFORE INSERT ON Factures FOR EACH ROW
+BEGIN
+	SELECT factures_seq.NEXTVAL
+	INTO :new.idFactures
+	FROM DUAL;
+END;
+/
+
+CREATE TABLE Fact_Taches(
+	idFactures INT NOT NULL,
+	idTache INT NOT NULL,
+	PRIMARY KEY (idFactures, idTache),
+	FOREIGN KEY (idFactures) REFERENCES Factures(idFactures),
+	FOREIGN KEY (idTache) REFERENCES Taches(idTache)
+);
+
+CREATE TABLE Fact_Projets(
+	idFactures INT NOT NULL,
+	idProjet INT NOT NULL,
+	PRIMARY KEY (idFactures, idProjet),
+	FOREIGN KEY (idFactures) REFERENCES Factures(idFactures),
+	FOREIGN KEY (idProjet) REFERENCES Projets(idProjet)
+);
+
+CREATE TABLE Fraisdeplacement(
+	idFrais INT PRIMARY KEY,
+	idTache INT NOT NULL,
+	idEmploye INT NOT NULL,
+	prix DECIMAL(7,2) NOT NULL,
+	FOREIGN KEY (idTache) REFERENCES Taches(idTache),
+	FOREIGN KEY (idEmploye) REFERENCES Employes(idEmploye)
+);
+CREATE SEQUENCE fraisdeplacement_seq;
+CREATE OR REPLACE TRIGGER fraisdeplacement_trigg
+BEFORE INSERT ON Fraisdeplacement FOR EACH ROW
+BEGIN
+	SELECT fraisdeplacement_seq.NEXTVAL
+	INTO :new.idFrais
+	FROM DUAL;
+END;
+/
+
+CREATE TABLE Fraisautres(
+	idFrais INT PRIMARY KEY,
+	prix DECIMAL(7,2) NOT NULL,
+	description varchar(100)
+);
+CREATE SEQUENCE fraisautre_seq;
+CREATE OR REPLACE TRIGGER fraisautre_trigg
+BEFORE INSERT ON Fraisautres FOR EACH ROW
+BEGIN
+	SELECT fraisautre_seq.NEXTVAL
+	INTO :new.idFrais
+	FROM DUAL;
+END;
+/
+
+CREATE TABLE Frais_Taches(
+	idFrais INT NOT NULL,
+	idTache INT NOT NULL,
+	PRIMARY KEY (idFrais, idTache),
+	FOREIGN KEY (idFrais) REFERENCES Fraisautres(idFrais),
+	FOREIGN KEY (idTache) REFERENCES Taches(idTache)
+);
+
+CREATE TABLE Frais_Projets(
+	idFrais INT NOT NULL,
+	idProjet INT NOT NULL,
+	PRIMARY KEY (idFrais, idProjet),
+	FOREIGN KEY (idFrais) REFERENCES Fraisautres(idFrais),
+	FOREIGN KEY (idProjet) REFERENCES Projets(idProjet)
 );
