@@ -207,3 +207,30 @@ CREATE TABLE RessourcesHumaines(
 	idEmploye INT,
 	PRIMARY KEY (idTache, idEmploye)
 );
+
+CREATE TABLE Personel_externe (
+	idPerso INT PRIMARY KEY,
+	entreprise VARCHAR(50),
+	nom VARCHAR2(50),
+	prenom VARCHAR2(50),
+	competences varchar(50),
+);
+
+CREATE SEQUENCE persoext_seq;
+CREATE OR REPLACE TRIGGER persoext_trigg
+BEFORE INSERT ON Personel_externe FOR EACH ROW
+BEGIN
+	SELECT persotext_seq.NEXTVAL
+	INTO :new.idPerso
+	FROM DUAL;
+END;
+/
+
+CREATE TABLE RH_Externe(
+	idPerso INT NOT NULL,
+	idTache INT NOT NULL,
+	prix DECIMAL(7,2) NOT NULL,
+	PRIMARY KEY (idPerso, idTache),
+	FOREIGN KEY (idPerso) REFERENCES Personel_externe(IdPerso),
+	FOREIGN KEY (idTache) REFERENCES Taches(idTache)
+);
